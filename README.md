@@ -95,7 +95,7 @@ Some of the current instructions supported (check `main.go` for latest):
 - `LEN` - Prints the length of the stack
 - `IDX` - Prints the stack pointer's index
 
-- 'END' - Ends the program
+- `END` - Ends the program
 
 > You can easily add more instructions by modifying the instruction parser in `main.go`.
 
@@ -113,11 +113,8 @@ vasm/
 
 ## 🧱 Future Improvements
 
-- REPL (interactive shell)
-- File-based program loading
 - More robust error handling
-- Instruction macros or custom functions
-- Testing framework
+- Labels/functions
 
 ---
 
@@ -135,4 +132,4 @@ Pull requests are welcome! For major changes, please open an issue first to disc
 
 ## ✨ Author
 
-Created with ❤️ by [@vili1120](https://github.com/vili1120)
+Created with ❤️ by [@vdev](https://github.com/vili1120)
