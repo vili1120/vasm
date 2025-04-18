@@ -1,6 +1,3 @@
-Absolutely! Here's a clean and informative `README.md` tailored for the [`vasm`](https://github.com/vili1120/vasm/tree/dev) project based on its purpose and current structure:
-
-```markdown
 # vasm
 
 **vasm** is a lightweight, assembly-like, stack-based interpreter written in Go. It allows you to define and run simple instructions using a stack-oriented execution model.
@@ -120,4 +117,3 @@ Pull requests are welcome! For major changes, please open an issue first to disc
 ## ✨ Author
 
 Created with ❤️ by [@vili1120](https://github.com/vili1120)
-```
