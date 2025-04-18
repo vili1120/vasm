@@ -26,6 +26,10 @@
 ```bash
 git clone https://github.com/vili1120/vasm.git
 cd vasm
+```
+For development branch:
+
+```bash
 git checkout dev
 ```
 
