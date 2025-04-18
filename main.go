@@ -131,6 +131,7 @@ func lex(text []string) []Tok {
     if len(cline) > 1 {
       arg = cline[1]
     }
+    op = strings.ToUpper(op)
     if strings.HasPrefix(op, "#") ||strings.HasPrefix(op, "//") {
       continue
     }
