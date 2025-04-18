@@ -6,6 +6,14 @@
 
 ---
 
+##   Stack-based Execution
+
+- Stack: an array of cells
+- Cell: contains an integer value
+- Stack pointer: the index of the current cell
+
+- Instructions operate on the current cell
+
 ## 🚀 Features
 
 - Stack-based execution
@@ -58,7 +66,8 @@ Below is an example of how a `vasm` program might look (assuming some standard i
 PUSH 10
 PUSH 20
 ADD
-PRINT
+PULL
+END
 ```
 
 This would push 10 and 20 to the stack, add them, and print the result (`30`).
@@ -69,20 +78,26 @@ This would push 10 and 20 to the stack, add them, and print the result (`30`).
 
 Some of the current instructions supported (check `main.go` for latest):
 
-- `PUSH <value>` – Push an integer value onto the stack
-- `POP` – Pop the top value from the stack
-- `ADD`, `SUB`, `MUL`, `DIV` – Basic arithmetic operations
-- `PRINT` – Prints the top of the stack
+- `PUSH <value>` – Push an integer value onto the current cell
+- `PULL` - Prints the current cell's value
+- `READ` - Reads user input for a value and pushes it to the current cell
+
+- `ADV` - Advances the stack pointer by 1
+- `DADV` - Deadvances the stack pointer by 1
+
+- `REMOVE` – Remove the value from the current cell
+
+- `ADD`, `SUB` – Basic arithmetic operations
+
+- `PRINTS` - Prints the whole stack
+- `PRINT <idx>` – Prints a cell's value based on the index from the stack
+
+- `LEN` - Prints the length of the stack
+- `IDX` - Prints the stack pointer's index
+
+- 'END' - Ends the program
 
 > You can easily add more instructions by modifying the instruction parser in `main.go`.
-
----
-
-## 🧪 Testing
-
-> Currently, there are no automated tests — but contributions are welcome!
-
-You can manually test by editing the `code` slice in `main.go` with your own instruction sets.
 
 ---
 
