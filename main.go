@@ -10,6 +10,11 @@ import (
 	"strings"
 )
 
+func Error(description string) {
+  fmt.Printf("Error: %v\n", description)
+  return
+}
+
 //////////////////////////////////////////////////////////////////////////////////////
 
 func NewStack(length int) *Stack {
@@ -30,6 +35,7 @@ type Stack struct {
 func (s *Stack) Advance() {
   s.sp++
   if s.sp >= len(s.cells) {
+    Error("Stack overflow!")
     s.sp--
   }
 }
@@ -37,6 +43,7 @@ func (s *Stack) Advance() {
 func (s *Stack) DeAdvance() {
   s.sp--
   if s.sp < 0 {
+    Error("Stack underflow!")
     s.sp++
   }
 }
@@ -59,8 +66,7 @@ func (s *Stack) Read() {
   fmt.Scanln(&i)
   val, err := strconv.Atoi(i)
   if err != nil {
-    fmt.Println("Invalid input")
-    return
+    Error("Invalid input!")
   }
   s.Push(val)
 }
@@ -72,11 +78,12 @@ func (s *Stack) PrintS() {
 func (s *Stack) Print(idx string) {
   val, err := strconv.Atoi(idx)
   if err != nil {
-    fmt.Println("Invalid index")
-    return
+    Error("Invalid index!")
   }
-  if !(val > len(s.cells)) || !(val < 0) {
+  if val < len(s.cells) && val > 0 {
     fmt.Println(s.cells[val])
+  } else {
+    Error("Index out of range!")
   }
 }
 
@@ -87,8 +94,7 @@ func (s *Stack) Len() {
 func (s *Stack) Add() {
   s.DeAdvance()
   if s.sp-1 < 0 {
-    panic("Index out of range!")
-    return
+    Error("Index out of range!")
   } else {
     s.cells[s.sp-1] = s.cells[s.sp-1]+s.cells[s.sp]
     s.Remove()
@@ -99,8 +105,7 @@ func (s *Stack) Add() {
 func (s *Stack) Sub() {
   s.DeAdvance()
   if s.sp-1 < 0 {
-    panic("Index out of range!")
-    return
+    Error("Index out of range!")
   } else {
     s.cells[s.sp-1] = s.cells[s.sp-1]-s.cells[s.sp]
     s.Remove()
@@ -140,91 +145,91 @@ func lex(text []string) []Tok {
       if arg != "" {
         toks = append(toks, Tok{op, arg})
       } else {
-        panic("No argument for PUSH!")
+        Error("No argument for PUSH!")
       }
     case "PULL":
       if arg == "" {
         toks = append(toks, Tok{op, arg})
       } else {
-        panic("Too many arguments for PULL!")
+        Error("Too many arguments for PULL!")
       }
     case "READ":
       if arg == "" {
         toks = append(toks, Tok{op, arg})
       } else {
-        panic("Too many arguments for READ!")
+        Error("Too many arguments for READ!")
       }
 
     case "DADV":
       if arg == "" {
         toks = append(toks, Tok{op, arg})
       } else {
-        panic("Too many arguments for DADV!")
+        Error("Too many arguments for DADV!")
       }
     case "ADV":
       if arg == "" {
         toks = append(toks, Tok{op, arg})
       } else {
-        panic("Too many arguments for ADV!")
+        Error("Too many arguments for ADV!")
       }
 
     case "REMOVE":
       if arg == "" {
         toks = append(toks, Tok{op, arg})
       } else {
-        panic("Too many arguments for REMOVE!")
+        Error("Too many arguments for REMOVE!")
       }
 
     case "PRINTS":
       if arg == "" {
         toks = append(toks, Tok{op, arg})
       } else {
-        panic("Too many arguments for PRINTS!")
+        Error("Too many arguments for PRINTS!")
       }
     case "PRINT":
       if arg != "" {
         toks = append(toks, Tok{op, arg})
       } else {
-        panic("No argument for PRINT!")
+        Error("No argument for PRINT!")
       }
 
     case "LEN":
       if arg == "" {
         toks = append(toks, Tok{op, arg})
       } else {
-        panic("Too many arguments for LEN!")
+        Error("Too many arguments for LEN!")
       }
 
     case "ADD":
       if arg == "" {
         toks = append(toks, Tok{op, arg})
       } else {
-        panic("Too many arguments for ADD!")
+        Error("Too many arguments for ADD!")
       }
     case "SUB":
       if arg == "" {
         toks = append(toks, Tok{op, arg})
       } else {
-        panic("Too many arguments for SUB!")
+        Error("Too many arguments for SUB!")
       }
 
     case "IDX":
       if arg == "" {
         toks = append(toks, Tok{op, arg})
       } else {
-        panic("Too many arguments for IDX!")
+        Error("Too many arguments for IDX!")
       }
 
     case "END":
       if arg == "" {
         toks = append(toks, Tok{op, arg})
       } else {
-        panic("Too many arguments for END!")
+        Error("Too many arguments for END!")
       }
     case "":
       continue
     default:
-      panic("Expected a command or END!")
+      Error("Expected a command or END!")
     }
   }
 
@@ -312,8 +317,7 @@ func input_full() []string {
 			fmt.Println("Error reading:", err)
 			break
 		}
-
-		line = strings.TrimSpace(line)
+		line = strings.ToUpper(strings.TrimSpace(line))
 		if line == "END" {
 			break
 		}
@@ -335,7 +339,7 @@ func input_cmd() []string {
 		os.Exit(0)
 	}
 
-	line = strings.TrimSpace(line)
+  line = strings.ToUpper(strings.TrimSpace(line))
 	if line == "END" {
 		os.Exit(0)
 	}
@@ -369,6 +373,7 @@ func main() {
       s := NewStack(length)
       interpret(toks, s)
     } else if mode == "cmd" {
+      fmt.Println("To end the program type END")
       s := NewStack(length)
       for {
         src = input_cmd()

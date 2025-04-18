@@ -74,6 +74,8 @@ This would push 10 and 20 to the stack, add them, and print the result (`30`).
 
 ## 📦 Instruction Set
 
+> Note: instructions are not case-sensitive
+
 Some of the current instructions supported (check `main.go` for latest):
 
 - `PUSH <value>` – Push an integer value onto the current cell
@@ -111,7 +113,7 @@ vasm/
 
 ## 🧱 Future Improvements
 
-- More robust error handling
+- More robust error handling(1/3)
 - Labels/functions
 
 ---
