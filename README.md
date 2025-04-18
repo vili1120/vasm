@@ -2,8 +2,6 @@
 
 **vasm** is a lightweight, assembly-like, stack-based interpreter written in Go. It allows you to define and run simple instructions using a stack-oriented execution model.
 
-> 🧠 Inspired by virtual machines and low-level computation, vasm is a great starting point for experimenting with custom interpreters or learning stack-based execution principles.
-
 ---
 
 ##   Stack-based Execution
