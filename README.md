@@ -41,17 +41,23 @@ git checkout dev
 
 ### Build & Run
 
-You can run the interpreter directly:
+##### You can run the interpreter directly:
 
 ```bash
-go run main.go
+go run program
 ```
 
-Or build it:
+##### Or build it:
 
 ```bash
 go build -o vasm
 ./vasm
+```
+
+###### For linux you can use:
+
+```bash
+./build.sh
 ```
 
 ---
@@ -105,8 +111,19 @@ Some of the current instructions supported (check `main.go` for latest):
 
 ```
 vasm/
-├── go.mod         # Go module definition
-└── main.go        # Core interpreter logic
+|-- README.md                   # Project readme file
+|-- build.sh                    # Script to build for linux
+|-- program/                    # Directory containing the go module
+|   |-- go.mod
+|   |-- lang/                   # Directory containing main logic for interpreter
+|   |   |-- input.go
+|   |   |-- interpreter.go
+|   |   |-- lexer.go
+|   |   |-- stack.go
+|   |   `-- types.go
+|   `-- main.go                 # Brings every package together
+|-- test.vasm                   # Test file to run after installation
+`-- uninstall.sh                # Uninstalls the vasm binary from path
 ```
 
 ---
