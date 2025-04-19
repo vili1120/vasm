@@ -24,6 +24,7 @@ func InputFull() []string {
     line := Input("> ")
 		line = strings.ToUpper(strings.TrimSpace(line))
     if strings.Split(line, " ")[0] == "LABEL" {
+      str = append(str, line)
       for {
         line = Input("--> ")
         line = strings.ToUpper(strings.TrimSpace(line))
@@ -44,27 +45,32 @@ func InputFull() []string {
 	return str
 }
 
-func InputCmd() []string {
+func InputCmd(labels *[]string) []string {
 	var str []string
-	
+
   line := Input("> ")
 
   line = strings.ToUpper(strings.TrimSpace(line))
   if strings.Split(line, " ")[0] == "LABEL" {
+    *labels = append(*labels, line)
     for {
       line := Input("--> ")
       line = strings.ToUpper(strings.TrimSpace(line))
       if line == "ENDL" {
-        str = append(str, line)
+        *labels = append(*labels, line)
         break
       }
-      str = append(str, line)
+      *labels = append(*labels, line)
 	  }
+    return nil
   }
   if line == "END" {
     os.Exit(0)
   }
-
+  
+  for _, l := range *labels {
+    str = append(str, l)
+  }
 	str = append(str, line)
 
 	return str

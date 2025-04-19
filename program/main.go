@@ -59,8 +59,12 @@ func main() {
     } else if mode == "cmd" {
       fmt.Println("To end the program type END")
       s := lang.NewStack(length)
+      var slabels []string
       for {
-        src = lang.InputCmd()
+        src = lang.InputCmd(&slabels)
+        if src == nil {
+          continue
+        }
         toks := lang.Lex(src)
         labels := lang.CollectLabels(toks)
         lang.Interpret(toks, s, labels)
