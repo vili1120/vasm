@@ -1,0 +1,13 @@
+jump main
+
+label main
+  jump addition
+  pull
+endl
+
+label addition
+  push 10
+  push 20
+  add
+  pull
+endl
