@@ -1,10 +1,14 @@
+# Jumps to main label
 jump main
 
+# Declaration of main label
 label main
+  # Jumping to addition label
   jump addition
   pull
 endl
 
+# addition label declaration
 label addition
   push 10
   push 20
