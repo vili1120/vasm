@@ -2,8 +2,9 @@ package lang
 
 import "fmt"
 
-func Error(description string) {
+func Error(description string, line string) {
   fmt.Printf("Error: %v\n", description)
+  fmt.Printf("  %v\n", line)
   return
 }
 

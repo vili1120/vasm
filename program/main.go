@@ -59,7 +59,7 @@ func main() {
     } else if mode == "cmd" {
       fmt.Println("To end the program type END")
       s := lang.NewStack(length)
-      var slabels []string
+      slabels := []string{}
       for {
         src = lang.InputCmd(&slabels)
         if src == nil {

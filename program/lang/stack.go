@@ -23,7 +23,7 @@ type Stack struct {
 func (s *Stack) Advance() {
   s.sp++
   if s.sp >= len(s.cells) {
-    Error("Stack overflow!")
+    Error("Stack overflow!", "")
     s.sp--
   }
 }
@@ -31,7 +31,7 @@ func (s *Stack) Advance() {
 func (s *Stack) DeAdvance() {
   s.sp--
   if s.sp < 0 {
-    Error("Stack underflow!")
+    Error("Stack underflow!", "")
     s.sp++
   }
 }
@@ -54,7 +54,7 @@ func (s *Stack) Read() {
   fmt.Scanln(&i)
   val, err := strconv.Atoi(i)
   if err != nil {
-    Error("Invalid input!")
+    Error("Invalid input!", fmt.Sprintf("READ %v", i))
   }
   s.Push(val)
 }
@@ -66,12 +66,12 @@ func (s *Stack) PrintS() {
 func (s *Stack) Print(idx string) {
   val, err := strconv.Atoi(idx)
   if err != nil {
-    Error("Invalid index!")
+    Error("Invalid index!", fmt.Sprintf("PRINT %v", idx))
   }
   if val < len(s.cells) && val > 0 {
     fmt.Println(s.cells[val])
   } else {
-    Error("Index out of range!")
+    Error("Index out of range!", fmt.Sprintf("PRINT %v", idx))
   }
 }
 
@@ -82,7 +82,7 @@ func (s *Stack) Len() {
 func (s *Stack) Add() {
   s.DeAdvance()
   if s.sp-1 < 0 {
-    Error("Index out of range!")
+    Error("Index out of range!", fmt.Sprintf("ADD"))
   } else {
     s.cells[s.sp-1] = s.cells[s.sp-1]+s.cells[s.sp]
     s.Remove()
@@ -93,7 +93,7 @@ func (s *Stack) Add() {
 func (s *Stack) Sub() {
   s.DeAdvance()
   if s.sp-1 < 0 {
-    Error("Index out of range!")
+    Error("Index out of range!", fmt.Sprintf("SUB"))
   } else {
     s.cells[s.sp-1] = s.cells[s.sp-1]-s.cells[s.sp]
     s.Remove()

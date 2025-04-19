@@ -23,7 +23,7 @@ func Interpret(toks []Tok, s *Stack, labels map[string]*Label) {
     case "PUSH":
       val, err := strconv.Atoi(tok.val)
       if err != nil {
-        Error(fmt.Sprintf("Invalid PUSH value: %v\n", tok.val))
+        Error(fmt.Sprintf("Invalid PUSH value: %v\n", tok.val), fmt.Sprintf("%v %v", tok.type_, tok.val))
         return
       }
       s.Push(val)
@@ -61,7 +61,8 @@ func Interpret(toks []Tok, s *Stack, labels map[string]*Label) {
     case "JUMP":
       label, ok := labels[tok.val]
       if !ok {
-        Error(fmt.Sprintf("Label '%v' doesn't exist!", tok.val))
+        Error(fmt.Sprintf("Label '%v' doesn't exist!", tok.val), fmt.Sprintf("%v %v", tok.type_, tok.val))
+        return
       }
       Interpret(label.program, s, labels)
       return
