@@ -28,10 +28,9 @@ type Interpreter struct {
 func (i *Interpreter) CollectLabels() {
   for _, instr := range i.Instrs {
     if instr.Op == "LABEL" && instr.Label != nil {
-      i.Labels[instr.Op] = instr.Label
+      i.Labels[instr.Label.Name] = instr.Label
     }
   }
-  i.Labels = make(map[string]*Label)
 }
 
 func (i *Interpreter) Advance() {
@@ -73,15 +72,18 @@ func (i *Interpreter) Interpret() {
       i.Advance()
 
     case instructions["LABEL"]:
+      i.Advance()
       continue
     case instructions["JUMP"]:
       label, ok := i.Labels[i.CInstr.Arg]
       if !ok {
         InterpreterError("Label doesn't exist", i.CInstr, i.Pc)
         i.Advance()
+        return
       }
-      i := NewInterpreter(label.program, i.Stack)
-      i.Interpret()
+      i2 := NewInterpreter(label.program, i.Stack)
+      i2.Interpret()
+      i2.Advance()
 
     case instructions["END"]:
       os.Exit(0)

@@ -3,6 +3,7 @@ package lang
 import (
 	//"fmt"
 	"fmt"
+	//"os"
 	"strings"
 )
 
@@ -30,7 +31,7 @@ func (l *Lexer) Advance() {
     l.Op = l.Ln[0]
     l.Arg = ""
     if len(l.Ln) > 1 {
-      l.Arg = strings.ToUpper(l.Ln[1])
+        l.Arg = strings.ToUpper(l.Ln[1])
     }
     l.Op = strings.ToUpper(l.Op)
   }
@@ -69,7 +70,7 @@ func (l *Lexer) MakeInstr() []*Instr {
 
     case instructions["LABEL"]:
       if l.IsArg() {
-        INSTRS = append(INSTRS, l.MakeLabel())
+        l.MakeLabel(&INSTRS)
         l.Advance()
       } else {
         LexerError(fmt.Sprintf("Too few arguments for %v", l.Op), l.Ln, l.Idx)
@@ -123,19 +124,28 @@ func (l *Lexer) MakeInstr() []*Instr {
   return INSTRS
 }
 
-func (l *Lexer) MakeLabel() *Instr {
-  program := []string{}
-  l.Idx++
-  for l.Idx < len(l.Lines) {
-    line := strings.TrimSpace(l.Lines[l.Idx])
-    if strings.ToUpper(line) == "END" {
-      program = append(program, line)
-      break
+func (l *Lexer) MakeLabel(instrs *[]*Instr) {
+    program := []string{}
+    op := l.Op
+    name := l.Arg
+    l.Advance()
+
+    for l.Idx < len(l.Lines) {
+        line := strings.TrimSpace(l.Lines[l.Idx])
+
+        if strings.ToUpper(line) == "END" {
+            program = append(program, line)
+            break
+        }
+
+        if line != "" {
+            program = append(program, line)
+        }
+        
+      l.Advance()
     }
-    program = append(program, line)
-    l.Idx++
-  }
-  lexer := NewLexer(program)
-  linstr := lexer.MakeInstr()
-  return NewInstr(l.Op, l.Arg, &Label{l.Arg, linstr})
+
+    lexer := NewLexer(program)
+    linstr := lexer.MakeInstr()
+    *instrs = append(*instrs, NewInstr(op, name, &Label{name, linstr}))
 }

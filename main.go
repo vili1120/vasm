@@ -67,19 +67,34 @@ func main() {
     }
 
     lang.Run(src, 16)
-  } else {
-    var src []string
-    f, err := os.Open(os.Args[1])
-    if err != nil { panic(err) }
-    defer f.Close()
-
-    scanner := bufio.NewScanner(f)
-    for scanner.Scan() {
-      src = append(src, scanner.Text())
+    } else {
+      f, err := os.Open(os.Args[1])
+      if err != nil {
+          panic(err)
+      }
+      defer f.Close()
+      
+      scanner := bufio.NewScanner(f)
+      var src []string
+      for scanner.Scan() {
+          line := scanner.Text()
+          fmt.Println("Read line from file:", line) // Debugging line
+          src = append(src, line)
+      }
+      
+      if err := scanner.Err(); err != nil {
+          panic(err)
+      }
+      
+      lang.Run(src, 16)
     }
-    if err := scanner.Err(); err != nil {
-      panic(err)
-    }
-    lang.Run(src, 16)
-  }
-}
+}  
+   
+   
+   
+   
+   
+   
+   
+   
+   

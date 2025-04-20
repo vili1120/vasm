@@ -1,5 +1,8 @@
-label addto
-  push 10
-  dadv
-  pull
-end
+PUSH 10
+LABEL foo
+  PUSH 1
+  PUSH 2
+  PRINTS
+  END
+JUMP foo
+END
