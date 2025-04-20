@@ -1,0 +1,5 @@
+label addto
+  push 10
+  dadv
+  pull
+end

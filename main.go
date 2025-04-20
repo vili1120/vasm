@@ -6,6 +6,7 @@ import (
 	"os"
 	"os/exec"
 	"runtime"
+	"strings"
 	"vasm/lang"
 )
 
@@ -32,19 +33,53 @@ func clear() {
 	}
 }
 
+func input(prompt string) string {
+  scanner := bufio.NewScanner(os.Stdin)
+  fmt.Print(prompt)
+  scanner.Scan()
+  return scanner.Text()
+}
+
 func main() {
-  var src []string
-  
-  for {
-    scanner := bufio.NewScanner(os.Stdin)
-    fmt.Print("> ")
-    scanner.Scan()
-    src = append(src, scanner.Text())
+  if len(os.Args) < 2 {
+    var src []string
+    
+    for {
+      text := input("> ")
+      op := strings.ToUpper(text)
+      
+      if strings.Split(op, " ")[0] == "LABEL" {
+        for {
+          text = input("--> ")
+          if strings.ToUpper(text) == "END" {
+            src = append(src, text)
+            break
+          }
+          src = append(src, text)
+        }
+      }
+      if op == "END" {
+        src = append(src, text)
+        break
+      }
 
-    if scanner.Text() == "end" {
-      break
+      src = append(src, text)
     }
-  }
 
-  lang.Run(src, 16)
+    lang.Run(src, 16)
+  } else {
+    var src []string
+    f, err := os.Open(os.Args[1])
+    if err != nil { panic(err) }
+    defer f.Close()
+
+    scanner := bufio.NewScanner(f)
+    for scanner.Scan() {
+      src = append(src, scanner.Text())
+    }
+    if err := scanner.Err(); err != nil {
+      panic(err)
+    }
+    lang.Run(src, 16)
+  }
 }

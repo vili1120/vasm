@@ -1,7 +1,7 @@
 package lang
 
 import (
-	//"fmt"
+	"fmt"
 	"os"
 )
 
@@ -10,7 +10,9 @@ func NewInterpreter(instrs []*Instr, stack *Stack) *Interpreter {
     Instrs: instrs,
     Pc: -1,
     Stack: stack,
+    Labels: map[string]*Label{},
   }
+  i.CollectLabels()
   i.Advance()
   return i
 }
@@ -20,6 +22,16 @@ type Interpreter struct {
   CInstr *Instr
   Pc int
   Stack *Stack
+  Labels map[string]*Label
+}
+
+func (i *Interpreter) CollectLabels() {
+  for _, instr := range i.Instrs {
+    if instr.Op == "LABEL" && instr.Label != nil {
+      i.Labels[instr.Op] = instr.Label
+    }
+  }
+  i.Labels = make(map[string]*Label)
 }
 
 func (i *Interpreter) Advance() {
@@ -30,7 +42,7 @@ func (i *Interpreter) Advance() {
 }
 
 func (i *Interpreter) Interpret() {
-  //fmt.Println("debug> interpreting")
+  fmt.Println("debug> interpreting")
   for {
     switch i.CInstr.Op {
     case instructions["PUSH"]:
@@ -59,6 +71,17 @@ func (i *Interpreter) Interpret() {
     case instructions["PRINT"]:
       i.Stack.Print(i.CInstr.Arg)
       i.Advance()
+
+    case instructions["LABEL"]:
+      continue
+    case instructions["JUMP"]:
+      label, ok := i.Labels[i.CInstr.Arg]
+      if !ok {
+        InterpreterError("Label doesn't exist", i.CInstr, i.Pc)
+        i.Advance()
+      }
+      i := NewInterpreter(label.program, i.Stack)
+      i.Interpret()
 
     case instructions["END"]:
       os.Exit(0)
