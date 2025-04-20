@@ -41,7 +41,9 @@ func (i *Interpreter) Advance() {
 }
 
 func (i *Interpreter) Interpret() {
-  fmt.Println("debug> interpreting")
+  if Debug == true {
+    fmt.Println("debug> interpreting")
+  }
   for {
     switch i.CInstr.Op {
     case instructions["PUSH"]:
@@ -55,6 +57,19 @@ func (i *Interpreter) Interpret() {
       i.Advance()
     case instructions["POP"]:
       i.Stack.Pop()
+      i.Advance()
+
+    case instructions["ADD"]:
+      i.Stack.Add()
+      i.Advance()
+    case instructions["SUB"]:
+      i.Stack.Sub()
+      i.Advance()
+    case instructions["MUL"]:
+      i.Stack.Mul()
+      i.Advance()
+    case instructions["DIV"]:
+      i.Stack.Div()
       i.Advance()
 
     case instructions["ADV"]:
@@ -79,9 +94,15 @@ func (i *Interpreter) Interpret() {
       if !ok {
         InterpreterError("Label doesn't exist", i.CInstr, i.Pc)
         i.Advance()
-        return
+        break
       }
-      i2 := NewInterpreter(label.program, i.Stack)
+      i2 := &Interpreter{
+        Instrs: label.program,
+        Pc: -1,
+        Stack: i.Stack,
+        Labels: i.Labels,
+      }
+      i2.Advance()
       i2.Interpret()
       i2.Advance()
 

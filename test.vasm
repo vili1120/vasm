@@ -1,8 +1,24 @@
-PUSH 10
-LABEL foo
-  PUSH 1
-  PUSH 2
-  PRINTS
-  END
-JUMP foo
-END
+# this is a comment
+jump main
+
+label main
+  jump addto
+end
+
+label foo
+  push 10
+  push 20
+  dadv
+  add
+  pull
+  #jump footwo
+end
+
+label footwo
+  pop
+  push 2
+  push 5
+  dadv
+  mul
+  pull
+end

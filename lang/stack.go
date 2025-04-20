@@ -36,7 +36,7 @@ func (s *Stack) DeAdvance() {
 func (s *Stack) Push(arg string) {
   val, err := strconv.Atoi(arg)
   if err != nil {
-    log.Fatal(err)
+    StackError("Error during push")
     return
   }
   s.Cells[s.Sp] = val
@@ -58,6 +58,44 @@ func (s *Stack) Pop() {
   s.Cells[s.Sp] = 0
 }
 
+func (s *Stack) Add() {
+  if s.Sp-1 < 0 || s.Sp > len(s.Cells)-1 {
+    StackError("Index out of range!")
+    return
+  }
+  s.Cells[s.Sp-1] += s.Cells[s.Sp]
+  s.Pop()
+  s.DeAdvance()
+}
+
+func (s *Stack) Sub() {
+  if s.Sp-1 < 0 || s.Sp > len(s.Cells)-1 {
+    StackError("Index out of range!")
+    return
+  }
+  s.Cells[s.Sp-1] -= s.Cells[s.Sp]
+}
+
+func (s *Stack) Mul() {
+  if s.Sp-1 < 0 || s.Sp > len(s.Cells)-1 {
+    StackError("Index out of range!")
+    return
+  }
+  s.Cells[s.Sp-1] *= s.Cells[s.Sp]
+}
+
+func (s *Stack) Div() {
+  if s.Sp-1 < 0 || s.Sp > len(s.Cells)-1 {
+    StackError("Index out of range!")
+    return
+  }
+  if s.Cells[s.Sp] == 0 {
+    StackError("Division by zero!")
+    return
+  }
+  s.Cells[s.Sp-1] /= s.Cells[s.Sp]
+}
+
 func (s *Stack) Prints() {
   fmt.Println(s.Cells)
 }
@@ -69,7 +107,7 @@ func (s *Stack) Print(idx string) {
     return
   }
   if val > len(s.Cells)-1 || val < 0 {
-    fmt.Println("Index out of range")
+    StackError("Index out of range!")
     return
   }
   fmt.Println(s.Cells[val])

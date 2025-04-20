@@ -1,11 +1,20 @@
 package lang
 
+var (
+  Debug = false
+)
+
 var instructions = map[string]string{
   "PUSH": "PUSH",
   "PULL": "PULL",
 
   "READ": "READ",
   "POP": "POP",
+
+  "ADD": "ADD",
+  "SUB": "SUB",
+  "MUL": "MUL",
+  "DIV": "DIV",
 
   "LABEL": "LABEL",
   "JUMP": "JUMP",

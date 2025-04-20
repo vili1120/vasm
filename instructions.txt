@@ -4,6 +4,12 @@ PULL - gets the current value from a cell
 READ - reads a value from user input and pushes it to the current cell
 POP - resets the current cell to zero
 
+## Arithmetic instructions
+ADD - takes the current cell and adds it to the one before it
+SUB - takes the current cell and subtracts from the one before it
+MUL - takes the current cell and multiplys it with the one before it
+DIV - divides the cell one before and divides it by the current one
+
 ## Label instructions
 LABEL <label name> - a label is a collection of instructions that you can jump to later on. (it ends with an 'END' instruction.)
 JUMP <label name> - jumps to a label. (nothing after this gets executed)
@@ -17,3 +23,6 @@ ADV - advances the stack pointer
 DADV - deadvances the stack pointer
 
 END - stops the program
+
+## Comments
+Comments are lines that start with '#'
