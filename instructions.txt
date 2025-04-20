@@ -1,0 +1,19 @@
+## Simple cell manipulation
+PUSH <value> - adds a value to the current cell and advances
+PULL - gets the current value from a cell
+READ - reads a value from user input and pushes it to the current cell
+POP - resets the current cell to zero
+
+## Label instructions
+LABEL <label name> - a label is a collection of instructions that you can jump to later on. (it ends with an 'END' instruction.)
+JUMP <label name> - jumps to a label. (nothing after this gets executed)
+
+## Printing instructions
+PRINTS - prints the full stack
+PRINT - prints a cell based on index
+
+## Simple instructions
+ADV - advances the stack pointer
+DADV - deadvances the stack pointer
+
+END - stops the program
