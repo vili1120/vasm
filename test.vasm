@@ -2,7 +2,7 @@
 jump main
 
 label main
-  jump addto
+  jump foo
 end
 
 label foo
@@ -10,8 +10,9 @@ label foo
   push 20
   dadv
   add
+  prints
   pull
-  #jump footwo
+  jump footwo
 end
 
 label footwo
@@ -20,5 +21,6 @@ label footwo
   push 5
   dadv
   mul
+  prints
   pull
 end

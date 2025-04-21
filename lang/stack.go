@@ -74,6 +74,8 @@ func (s *Stack) Sub() {
     return
   }
   s.Cells[s.Sp-1] -= s.Cells[s.Sp]
+  s.Pop()
+  s.DeAdvance()
 }
 
 func (s *Stack) Mul() {
@@ -82,6 +84,8 @@ func (s *Stack) Mul() {
     return
   }
   s.Cells[s.Sp-1] *= s.Cells[s.Sp]
+  s.Pop()
+  s.DeAdvance()
 }
 
 func (s *Stack) Div() {
@@ -94,6 +98,8 @@ func (s *Stack) Div() {
     return
   }
   s.Cells[s.Sp-1] /= s.Cells[s.Sp]
+  s.Pop()
+  s.DeAdvance()
 }
 
 func (s *Stack) Prints() {
