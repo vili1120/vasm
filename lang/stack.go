@@ -118,3 +118,18 @@ func (s *Stack) Print(idx string) {
   }
   fmt.Println(s.Cells[val])
 }
+
+func (s *Stack) If(val string, type_ string) bool {
+  val2, err := strconv.Atoi(val)
+  if err != nil {
+    StackError("Cannot convert into integer")
+    return false
+  }
+  switch type_ {
+  case "EQ":
+    return s.Cells[s.Sp] == val2
+  case "NE":
+    return s.Cells[s.Sp] != val2
+  }
+  return false
+}

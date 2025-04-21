@@ -3,6 +3,7 @@ package lang
 import (
 	"fmt"
 	"os"
+	"strings"
 )
 
 func NewInterpreter(instrs []*Instr, stack *Stack) *Interpreter {
@@ -44,7 +45,33 @@ func (i *Interpreter) Interpret() {
   if Debug == true {
     fmt.Println("debug> interpreting")
   }
-  for {
+  for i.Pc < len(i.Instrs) {
+    if Debug {
+      fmt.Printf("Pc: %d, Instruction: %v\n", i.Pc, i.CInstr)
+    }
+
+    if strings.HasPrefix(i.CInstr.Op, "IF") {
+      if i.Stack.If(i.CInstr.IfInstr.val, i.CInstr.IfInstr.type_) {
+        i2 := &Interpreter{
+          Instrs: i.CInstr.IfInstr.body,
+          Pc: -1,
+          Stack: i.Stack,
+          Labels: i.Labels,
+        }
+        i2.Advance()
+        i2.Interpret()
+        i2.Advance()
+      }
+      for {
+        i.Advance()
+        if i.Pc >= len(i.Instrs) || i.CInstr.Op == instructions["FI"] {
+          break
+        }
+      }
+
+      i.Advance()
+    }
+
     switch i.CInstr.Op {
     case instructions["PUSH"]:
       i.Stack.Push(i.CInstr.Arg)
@@ -105,6 +132,9 @@ func (i *Interpreter) Interpret() {
       i2.Advance()
       i2.Interpret()
       i2.Advance()
+
+    case instructions["FI"]:
+      return
 
     case instructions["END"]:
       os.Exit(0)

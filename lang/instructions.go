@@ -19,6 +19,10 @@ var instructions = map[string]string{
   "LABEL": "LABEL",
   "JUMP": "JUMP",
 
+  "IF.EQ": "IF.EQ",
+  "IF.NE": "IF.NE",
+  "FI": "FI",
+
   "ADV": "ADV",
   "DADV": "DADV",
 
@@ -28,7 +32,7 @@ var instructions = map[string]string{
   "END": "END",
 }
 
-func NewInstr(op string, arg string, label *Label) *Instr {
+func NewInstr(op string, arg string, label *Label, ifinstr *IfInstr) *Instr {
   if arg == "" {
     arg = ""
   }
@@ -36,6 +40,7 @@ func NewInstr(op string, arg string, label *Label) *Instr {
     Op: op,
     Arg: arg,
     Label: label,
+    IfInstr: ifinstr,
   }
 }
 
@@ -43,9 +48,16 @@ type Instr struct {
   Op string
   Arg string
   Label *Label
+  IfInstr *IfInstr
 }
 
 type Label struct {
   Name string
   program []*Instr
+}
+
+type IfInstr struct {
+  type_ string
+  val string
+  body []*Instr
 }

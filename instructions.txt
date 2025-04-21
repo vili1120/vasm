@@ -14,6 +14,10 @@ DIV - divides the cell one before and divides it by the current one
 LABEL <label name> - a label is a collection of instructions that you can jump to later on. (it ends with an 'END' instruction.)
 JUMP <label name> - jumps to a label. (nothing after this gets executed)
 
+## If instructions
+IF.EQ <value> - executes the instructions inside its body if current cell is equal to the value
+IF.NE <value> - executes the instructions inside its body if current cell is not equal to the value
+
 ## Printing instructions
 PRINTS - prints the full stack
 PRINT - prints a cell based on index

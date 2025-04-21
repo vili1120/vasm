@@ -74,10 +74,15 @@ func (l *Lexer) MakeInstr() []*Instr {
       continue
     }
 
+    if strings.HasPrefix(l.Op, "IF.") {
+      l.MakeIf(&INSTRS)
+      continue
+    }
+
     switch l.Op {
     case instructions["PUSH"]:
       if l.IsArg() {
-        INSTRS = append(INSTRS, NewInstr(l.Op, l.Arg, nil))
+        INSTRS = append(INSTRS, NewInstr(l.Op, l.Arg, nil, nil))
         l.Advance()
       } else {
         LexerError(fmt.Sprintf("Too few arguments for %v", l.Op), l.Ln, l.Idx)
@@ -85,7 +90,7 @@ func (l *Lexer) MakeInstr() []*Instr {
       }
     case instructions["PULL"], instructions["READ"], instructions["POP"]:
       if !l.IsArg() {
-        INSTRS = append(INSTRS, NewInstr(l.Op, "", nil))
+        INSTRS = append(INSTRS, NewInstr(l.Op, "", nil, nil))
         l.Advance()
       } else {
         LexerError(fmt.Sprintf("Too many arguments for %v", l.Op), l.Ln, l.Idx)
@@ -94,7 +99,7 @@ func (l *Lexer) MakeInstr() []*Instr {
 
     case instructions["ADD"], instructions["SUB"], instructions["MUL"], instructions["DIV"]:
       if !l.IsArg() {
-        INSTRS = append(INSTRS, NewInstr(l.Op, "", nil))
+        INSTRS = append(INSTRS, NewInstr(l.Op, "", nil, nil))
         l.Advance()
       } else {
         LexerError(fmt.Sprintf("Too many arguments for %v", l.Op), l.Ln, l.Idx)
@@ -112,7 +117,7 @@ func (l *Lexer) MakeInstr() []*Instr {
       }
     case instructions["JUMP"]:
       if l.IsArg() {
-        INSTRS = append(INSTRS, NewInstr(l.Op, l.Arg, nil))
+        INSTRS = append(INSTRS, NewInstr(l.Op, l.Arg, nil, nil))
         l.Advance()
       } else {
         LexerError(fmt.Sprintf("Too few arguments for %v", l.Op), l.Ln, l.Idx)
@@ -121,7 +126,7 @@ func (l *Lexer) MakeInstr() []*Instr {
 
     case instructions["ADV"], instructions["DADV"]:
       if !l.IsArg() {
-        INSTRS = append(INSTRS, NewInstr(l.Op, "", nil))
+        INSTRS = append(INSTRS, NewInstr(l.Op, "", nil, nil))
         l.Advance()
       } else {
         LexerError(fmt.Sprintf("Too many arguments for %v", l.Op), l.Ln, l.Idx)
@@ -130,7 +135,7 @@ func (l *Lexer) MakeInstr() []*Instr {
 
     case instructions["PRINTS"]:
       if !l.IsArg() {
-        INSTRS = append(INSTRS, NewInstr(l.Op, "", nil))
+        INSTRS = append(INSTRS, NewInstr(l.Op, "", nil, nil))
         l.Advance()
       } else {
         LexerError(fmt.Sprintf("Too many arguments for %v", l.Op), l.Ln, l.Idx)
@@ -138,10 +143,19 @@ func (l *Lexer) MakeInstr() []*Instr {
       }
     case instructions["PRINT"]:
       if l.IsArg() {
-        INSTRS = append(INSTRS, NewInstr(l.Op, l.Arg, nil))
+        INSTRS = append(INSTRS, NewInstr(l.Op, l.Arg, nil, nil))
         l.Advance()
       } else {
         LexerError(fmt.Sprintf("Too few arguments for %v", l.Op), l.Ln, l.Idx)
+        l.Advance()
+      }
+
+    case instructions["FI"]:
+      if !l.IsArg() {
+        INSTRS = append(INSTRS, NewInstr(l.Op, l.Arg, nil, nil))
+        l.Advance()
+      } else {
+        LexerError(fmt.Sprintf("Too many arguments for %v", l.Op), l.Ln, l.Idx)
         l.Advance()
       }
 
@@ -153,7 +167,7 @@ func (l *Lexer) MakeInstr() []*Instr {
     }
   }
 
-  INSTRS = append(INSTRS, NewInstr(l.Op, "", nil))
+  INSTRS = append(INSTRS, NewInstr(l.Op, l.Arg, nil, nil))
 
   return INSTRS
 }
@@ -184,5 +198,42 @@ func (l *Lexer) MakeLabel(instrs *[]*Instr) {
 
   lexer := NewLexer(program)
   linstr := lexer.MakeInstr()
-  *instrs = append(*instrs, NewInstr(op, name, &Label{name, linstr}))
+  *instrs = append(*instrs, NewInstr(op, name, &Label{name, linstr}, nil))
+}
+
+func (l *Lexer) MakeIf(instrs *[]*Instr) {
+  program := []string{}
+  op := l.Op
+  name := l.Arg
+  type_ := ""
+  switch l.Op {
+  case instructions["IF.EQ"]:
+    type_ = "EQ"
+  case instructions["IF.NE"]:
+    type_ = "NE"
+  }
+  l.Advance()
+
+  for l.Idx < len(l.Lines) {
+    line := strings.TrimSpace(l.Lines[l.Idx])
+    if line == "" {
+      l.Advance()
+      continue
+    }
+
+    if strings.ToUpper(line) == "FI" {
+        program = append(program, line)
+        break
+    }
+    if line != "" {
+      program = append(program, line)
+    }
+
+    l.Advance()
+  }
+
+  lexer := NewLexer(program)
+  linstr := lexer.MakeInstr()
+
+  *instrs = append(*instrs, NewInstr(op, name, nil, &IfInstr{type_: type_, val: name, body: linstr}))
 }
