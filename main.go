@@ -75,6 +75,16 @@ func main() {
           src = append(src, text)
         }
       }
+      if strings.HasPrefix(op, "IF.") {
+        for {
+          text = input("--> ")
+          if strings.ToUpper(text) == "FI" {
+            src = append(src, text)
+            break
+          }
+          src = append(src, text)
+        }
+      }
       if op == "END" {
         src = append(src, text)
         break

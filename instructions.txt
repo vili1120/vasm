@@ -17,6 +17,10 @@ JUMP <label name> - jumps to a label. (nothing after this gets executed)
 ## If instructions
 IF.EQ <value> - executes the instructions inside its body if current cell is equal to the value
 IF.NE <value> - executes the instructions inside its body if current cell is not equal to the value
+IF.LT <value> - executes the instructions inside its body if current cell is less than the value
+IF.GT <value> - executes the instructions inside its body if current cell is greater than the value
+IF.LTE <value> - executes the instructions inside its body if current cell is less than or equals to the value
+IF.GTE <value> - executes the instructions inside its body if current cell is greater than or equals to the value
 
 ## Printing instructions
 PRINTS - prints the full stack

@@ -130,6 +130,14 @@ func (s *Stack) If(val string, type_ string) bool {
     return s.Cells[s.Sp] == val2
   case "NE":
     return s.Cells[s.Sp] != val2
+  case "LT":
+    return s.Cells[s.Sp] < val2
+  case "GT":
+    return s.Cells[s.Sp] > val2
+  case "LTE":
+    return s.Cells[s.Sp] <= val2
+  case "GTE":
+    return s.Cells[s.Sp] >= val2
   }
   return false
 }

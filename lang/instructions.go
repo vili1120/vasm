@@ -21,6 +21,10 @@ var instructions = map[string]string{
 
   "IF.EQ": "IF.EQ",
   "IF.NE": "IF.NE",
+  "IF.LT": "IF.LT",
+  "IF.GT": "IF.GT",
+  "IF.LTE": "IF.LTE",
+  "IF.GTE": "IF.GTE",
   "FI": "FI",
 
   "ADV": "ADV",

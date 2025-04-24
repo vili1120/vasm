@@ -211,6 +211,14 @@ func (l *Lexer) MakeIf(instrs *[]*Instr) {
     type_ = "EQ"
   case instructions["IF.NE"]:
     type_ = "NE"
+  case instructions["IF.LT"]:
+    type_ = "LT"
+  case instructions["IF.GT"]:
+    type_ = "GT"
+  case instructions["IF.LTE"]:
+    type_ = "LTE"
+  case instructions["IF.GTE"]:
+    type_ = "GTE"
   }
   l.Advance()
 
