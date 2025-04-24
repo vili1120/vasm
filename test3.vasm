@@ -1,0 +1,35 @@
+jump main
+
+label main
+  read
+  dadv
+  if.eq 10
+    jump addto
+  fi
+  if.eq 5
+    jump ending
+  fi
+  jump subto
+end
+
+label addto
+  adv
+  push 10
+  dadv
+  add
+  pull
+  jump ending
+end
+
+label subto
+  adv
+  push 10
+  dadv
+  sub
+  pull
+  jump ending
+end
+
+label ending
+  prints
+end
