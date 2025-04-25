@@ -21,6 +21,7 @@ IF.LT <value> - executes the instructions inside its body if current cell is les
 IF.GT <value> - executes the instructions inside its body if current cell is greater than the value
 IF.LTE <value> - executes the instructions inside its body if current cell is less than or equals to the value
 IF.GTE <value> - executes the instructions inside its body if current cell is greater than or equals to the value
+All of them end with a 'FI' instruction.
 
 ## Printing instructions
 PRINTS - prints the full stack

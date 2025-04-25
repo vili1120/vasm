@@ -42,46 +42,7 @@ Example:
 
 ## 🧾 Instruction Set
 
-### 🧮 Simple Cell Manipulation
-| Instruction       | Description                                             |
-|------------------|---------------------------------------------------------|
-| `PUSH <value>`   | Adds a value to the current cell and advances           |
-| `PULL`           | Prints the value of the current cell                    |
-| `READ`           | Reads a value from user input and pushes it             |
-| `POP`            | Resets the current cell to zero                         |
-
-### ➕ Arithmetic Operations
-| Instruction       | Description                                             |
-|------------------|---------------------------------------------------------|
-| `ADD`            | Adds the current cell to the previous one               |
-| `SUB`            | Subtracts the current cell from the previous one        |
-| `MUL`            | Multiplies the current and previous cell values         |
-| `DIV`            | Divides the previous cell by the current one            |
-
-### 🔁 Labels & Control Flow
-| Instruction         | Description                                           |
-|--------------------|-------------------------------------------------------|
-| `LABEL <name>`     | Defines a label block (ends with `END`)              |
-| `JUMP <label>`     | Jumps to a label (skips all following instructions)  |
-
-### 🔎 Conditionals
-| Instruction       | Description                                             |
-|------------------|---------------------------------------------------------|
-| `IF.EQ <value>`  | Executes inner block if current cell equals value       |
-| `IF.NE <value>`  | Executes inner block if current cell does not equal value |
-
-### 📤 Output
-| Instruction       | Description                                             |
-|------------------|---------------------------------------------------------|
-| `PRINTS`         | Prints the full stack                                   |
-| `PRINT`          | Prints a cell based on index                            |
-
-### 📍 Pointer Movement & Program Control
-| Instruction       | Description                                             |
-|------------------|---------------------------------------------------------|
-| `ADV`            | Advances the stack pointer                              |
-| `DADV`           | Moves the pointer backward                              |
-| `END`            | Ends execution                                           |
+View [instructions.norg](instructions.norg) or [instructions.txt](instructions.txt) for instruction set
 
 ---
 

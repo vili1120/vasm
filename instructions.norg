@@ -1,0 +1,66 @@
+* Cell instructions
+** PUSH `<value>`:
+   - sets the current cell to the value and advances
+** PULL:
+   - prints the current cells value
+** READ:
+   - takes user input and pushes it to the current cell
+** POP:
+   - resets the current cell to zero
+
+* Arithmetic instructions
+** ADD:
+   - adds the current cell to the one before it
+** SUB:
+   - subtracts the current cell from the one before it
+** MUL:
+   - multiplies the current cell with the one before it
+** DIV:
+   - divides the cell before with the current one
+
+* Label instructions
+** LABEL `<label name>`:
+   - creates a label with the name `<label name>`
+   - a collection of instructions that you can jump to later on
+   - ends with a 'END' instruction
+** JUMP `<label name>`:
+   - jumps to the label that has the name `<label name>`
+   - nothing after jump gets executed
+  
+* If instructions
+** IF.EQ `<value>`:
+   - if `<current cell> == <value>` is true then it executes its body
+** IF.NE `<value>`:
+   - if `<current cell> != <value>` is true then it executes its body
+** IF.LT `<value>`:
+   - if `<current cell> < <value>` is true then it executes its body
+** IF.GT `<value>`:
+   - if `<current cell> > <value>` is true then it executes its body
+** IF.EQ `<value>`:
+   - if `<current cell> <= <value>` is true then it executes its body
+** IF.EQ `<value>`:
+   - if `<current cell> >= <value>` is true then it executes its body
+** Each one ends with a 'FI' instruction
+
+* Print instructions
+** PRINTS:
+   - prints the current stack
+** PRINT `<index>`:
+   - prints a cell from the stack based on the `<index>`
+
+* Simple instructions
+** ADV:
+   - advances the stack pointer by one
+** DADV:
+   - deadvances the stack pointer by one
+** END:
+   - ends the program
+
+* Etc.
+** Comments
+   - comments are lines that start with '#'
+** Stack based execution:
+   - a stack in this context is an array of cells
+   - each cell holds an integer value
+   - the current cell is the cell at the index of the stack pointer
+   - most instructions manipulate the stack
