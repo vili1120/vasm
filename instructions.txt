@@ -35,3 +35,9 @@ END - stops the program
 
 ## Comments
 Comments are lines that start with '#'
+
+## Stack based execution
+A stack in this context is an array of cells.
+Each cell holds an integer value.
+The current cell is the cell at the index of the stack pointer.
+Most instructions manipulate the stack.
