@@ -8,6 +8,7 @@
 - Arithmetic operations between adjacent cells
 - Conditional execution
 - Label-based control flow with jumping
+- Simple Raylib bindings
 - Simple I/O capabilities
 - Clear and readable syntax
 
@@ -22,6 +23,7 @@
 ```bash
 git clone https://github.com/vili1120/vasm.git
 cd vasm
+cd program
 go build -o vasm
 ```
 
@@ -58,18 +60,22 @@ View [instructions.norg](instructions/instructions.norg) or [instructions.txt](i
 
 ```
 vasm/
-├── lang/              # Core logic for parsing and executing
-│   └── ...
-├── test.vasm          # Sample program
-├── test2.vasm         # Another sample
-├── instructions.txt   # Detailed instruction set
-├── main.go            # Entry point of the interpreter
-└── go.mod             # Go module file
+|-- README.md
+|-- instructions/               # Different instruction sets
+|   |-- instructions.norg
+|   `-- instructions.txt
+|-- program/                    # The main logic of the interpreter
+|   |-- ...
+`-- tests/                      # Tests for testing the capabilities of the interpreter
+    |-- test.vasm
+    |-- test2.vasm
+    |-- test3.vasm
+    `-- test4.vasm
 ```
 
 ---
 
-## 📄 Example Program
+## 📄 Example Programs
 
 ```vasm
 # Adds two numbers and prints the result
@@ -78,6 +84,34 @@ PUSH 3
 DADV
 ADD
 PULL
+```
+
+```vasm
+# Creates a simple raylib program
+
+# The width of the window
+PUSH 640
+
+# The height of the window
+PUSH 320
+
+# The target fps
+PUSH 60
+
+RL:INIT 0 1
+RL:FPS 2
+
+RL:FORCLOSE
+    RL:BEGINDRAWING
+    
+    RL:CLEAR WHITE
+
+    RL:ENDDRAWING
+ROF
+
+RL:EXEC
+
+END
 ```
 
 ---
