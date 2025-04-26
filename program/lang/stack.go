@@ -141,3 +141,14 @@ func (s *Stack) If(val string, type_ string) bool {
   }
   return false
 }
+
+func (s *Stack) Get(idx string) int {
+  val, err := strconv.Atoi(idx)
+  if err != nil {
+    log.Fatal(err)
+  }
+  if val > len(s.Cells)-1 || val < 0 {
+    StackError("Index out of range!")
+  }
+  return s.Cells[val]
+}

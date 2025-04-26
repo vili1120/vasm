@@ -1,5 +1,7 @@
 package lang
 
+import "fmt"
+
 var (
   Debug = false
 )
@@ -27,6 +29,19 @@ var instructions = map[string]string{
   "IF.GTE": "IF.GTE",
   "FI": "FI",
 
+  "RL:INIT": "RL:INIT",
+  "RL:FPS": "RL:FPS",
+  "RL:FORCLOSE": "RL:FORCLOSE",
+  "RL:CLOSE": "RL:CLOSE",
+  "RL:SAMPLEDRAW": "RL:SAMPLEDRAW",
+  "RL:BEGINDRAWING": "RL:BEGINDRAWING",
+  "RL:ENDDRAWING": "RL:ENDDRAWING",
+  "RL:CLEAR": "RL:CLEAR",
+
+  "RL:EXEC": "RL:EXEC",
+
+  "ROF": "ROF",
+
   "ADV": "ADV",
   "DADV": "DADV",
 
@@ -36,23 +51,28 @@ var instructions = map[string]string{
   "END": "END",
 }
 
-func NewInstr(op string, arg string, label *Label, ifinstr *IfInstr) *Instr {
-  if arg == "" {
-    arg = ""
-  }
+func NewInstr(op string, arg []string, label *Label, ifinstr *IfInstr, loop []*Instr) *Instr {
   return &Instr{
     Op: op,
     Arg: arg,
     Label: label,
     IfInstr: ifinstr,
+    Loop: loop,
   }
 }
 
 type Instr struct {
   Op string
-  Arg string
+  Arg []string
   Label *Label
   IfInstr *IfInstr
+  Loop []*Instr
+}
+
+func (i *Instr) String() string {
+  return fmt.Sprintf("OP: %v, ARG: %v\nLABEL: %v, IFINSTR: %v\nLOOP: %v\n",
+    i.Op, i.Arg, i.Label, i.IfInstr, i.Loop,
+  )
 }
 
 type Label struct {

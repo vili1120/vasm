@@ -17,11 +17,11 @@ func LexerError(desc string, line []string, ln int) {
 }
 
 func InterpreterError(desc string, line *Instr, ln int) {
-  Error("Interpreter", desc, []string{line.Op, line.Arg}, ln)
+  Error("Interpreter", desc, []string{line.Op, fmt.Sprint(line.Arg)}, ln)
 }
 
 func StackError(desc string) {
-  res := fmt.Sprintf("STACK ERROR: %v", desc)
+  res := fmt.Sprintf("STACK ERROR: %v\n", desc)
   fmt.Print(res)
   return
 }

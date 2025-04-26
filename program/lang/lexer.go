@@ -20,7 +20,7 @@ type Lexer struct {
   Lines []string
   Ln []string
   Op string
-  Arg string
+  Args []string
   Idx int
 }
 
@@ -29,7 +29,7 @@ func (l *Lexer) Advance() {
     l.Idx++
     if l.Idx >= len(l.Lines) {
       l.Op = ""
-      l.Arg = ""
+      l.Args =  []string{}
       return
     }
 
@@ -40,9 +40,11 @@ func (l *Lexer) Advance() {
 
     l.Ln = strings.Split(line, " ")
     l.Op = strings.ToUpper(l.Ln[0])
-    l.Arg = ""
+    l.Args = []string{}
     if len(l.Ln) > 1 {
-      l.Arg = strings.ToUpper(l.Ln[1])
+      for _, arg := range l.Ln[1:] {
+        l.Args = append(l.Args, strings.ToUpper(arg))
+      }
     }
     break
   }
@@ -50,7 +52,7 @@ func (l *Lexer) Advance() {
 
 
 func (l *Lexer) IsArg() bool {
-  if l.Arg != "" {
+  if len(l.Args) >= 1 {
     return true
   }
   return false
@@ -79,10 +81,15 @@ func (l *Lexer) MakeInstr() []*Instr {
       continue
     }
 
+    if strings.HasPrefix(l.Op, "RL:") {
+      l.MakeRL(&INSTRS)
+      continue
+    }
+
     switch l.Op {
     case instructions["PUSH"]:
       if l.IsArg() {
-        INSTRS = append(INSTRS, NewInstr(l.Op, l.Arg, nil, nil))
+        INSTRS = append(INSTRS, NewInstr(l.Op, l.Args, nil, nil, nil))
         l.Advance()
       } else {
         LexerError(fmt.Sprintf("Too few arguments for %v", l.Op), l.Ln, l.Idx)
@@ -90,7 +97,7 @@ func (l *Lexer) MakeInstr() []*Instr {
       }
     case instructions["PULL"], instructions["READ"], instructions["POP"]:
       if !l.IsArg() {
-        INSTRS = append(INSTRS, NewInstr(l.Op, "", nil, nil))
+        INSTRS = append(INSTRS, NewInstr(l.Op, []string{}, nil, nil, nil))
         l.Advance()
       } else {
         LexerError(fmt.Sprintf("Too many arguments for %v", l.Op), l.Ln, l.Idx)
@@ -99,7 +106,7 @@ func (l *Lexer) MakeInstr() []*Instr {
 
     case instructions["ADD"], instructions["SUB"], instructions["MUL"], instructions["DIV"]:
       if !l.IsArg() {
-        INSTRS = append(INSTRS, NewInstr(l.Op, "", nil, nil))
+        INSTRS = append(INSTRS, NewInstr(l.Op, []string{}, nil, nil, nil))
         l.Advance()
       } else {
         LexerError(fmt.Sprintf("Too many arguments for %v", l.Op), l.Ln, l.Idx)
@@ -117,7 +124,7 @@ func (l *Lexer) MakeInstr() []*Instr {
       }
     case instructions["JUMP"]:
       if l.IsArg() {
-        INSTRS = append(INSTRS, NewInstr(l.Op, l.Arg, nil, nil))
+        INSTRS = append(INSTRS, NewInstr(l.Op, l.Args, nil, nil, nil))
         l.Advance()
       } else {
         LexerError(fmt.Sprintf("Too few arguments for %v", l.Op), l.Ln, l.Idx)
@@ -126,7 +133,7 @@ func (l *Lexer) MakeInstr() []*Instr {
 
     case instructions["ADV"], instructions["DADV"]:
       if !l.IsArg() {
-        INSTRS = append(INSTRS, NewInstr(l.Op, "", nil, nil))
+        INSTRS = append(INSTRS, NewInstr(l.Op, []string{}, nil, nil, nil))
         l.Advance()
       } else {
         LexerError(fmt.Sprintf("Too many arguments for %v", l.Op), l.Ln, l.Idx)
@@ -135,7 +142,7 @@ func (l *Lexer) MakeInstr() []*Instr {
 
     case instructions["PRINTS"]:
       if !l.IsArg() {
-        INSTRS = append(INSTRS, NewInstr(l.Op, "", nil, nil))
+        INSTRS = append(INSTRS, NewInstr(l.Op, []string{}, nil, nil, nil))
         l.Advance()
       } else {
         LexerError(fmt.Sprintf("Too many arguments for %v", l.Op), l.Ln, l.Idx)
@@ -143,7 +150,7 @@ func (l *Lexer) MakeInstr() []*Instr {
       }
     case instructions["PRINT"]:
       if l.IsArg() {
-        INSTRS = append(INSTRS, NewInstr(l.Op, l.Arg, nil, nil))
+        INSTRS = append(INSTRS, NewInstr(l.Op, l.Args, nil, nil, nil))
         l.Advance()
       } else {
         LexerError(fmt.Sprintf("Too few arguments for %v", l.Op), l.Ln, l.Idx)
@@ -152,7 +159,16 @@ func (l *Lexer) MakeInstr() []*Instr {
 
     case instructions["FI"]:
       if !l.IsArg() {
-        INSTRS = append(INSTRS, NewInstr(l.Op, l.Arg, nil, nil))
+        INSTRS = append(INSTRS, NewInstr(l.Op, []string{}, nil, nil, nil))
+        l.Advance()
+      } else {
+        LexerError(fmt.Sprintf("Too many arguments for %v", l.Op), l.Ln, l.Idx)
+        l.Advance()
+      }
+
+    case instructions["ROF"]:
+      if !l.IsArg() {
+        INSTRS = append(INSTRS, NewInstr(l.Op, []string{}, nil, nil, nil))
         l.Advance()
       } else {
         LexerError(fmt.Sprintf("Too many arguments for %v", l.Op), l.Ln, l.Idx)
@@ -167,7 +183,7 @@ func (l *Lexer) MakeInstr() []*Instr {
     }
   }
 
-  INSTRS = append(INSTRS, NewInstr(l.Op, l.Arg, nil, nil))
+  INSTRS = append(INSTRS, NewInstr(l.Op, []string{}, nil, nil, nil))
 
   return INSTRS
 }
@@ -175,7 +191,7 @@ func (l *Lexer) MakeInstr() []*Instr {
 func (l *Lexer) MakeLabel(instrs *[]*Instr) {
   program := []string{}
   op := l.Op
-  name := l.Arg
+  name := l.Args[0]
   l.Advance()
 
   for l.Idx < len(l.Lines) {
@@ -198,13 +214,13 @@ func (l *Lexer) MakeLabel(instrs *[]*Instr) {
 
   lexer := NewLexer(program)
   linstr := lexer.MakeInstr()
-  *instrs = append(*instrs, NewInstr(op, name, &Label{name, linstr}, nil))
+  *instrs = append(*instrs, NewInstr(op, []string{name}, &Label{name, linstr}, nil, nil))
 }
 
 func (l *Lexer) MakeIf(instrs *[]*Instr) {
   program := []string{}
   op := l.Op
-  name := l.Arg
+  name := l.Args[0]
   type_ := ""
   switch l.Op {
   case instructions["IF.EQ"]:
@@ -243,5 +259,104 @@ func (l *Lexer) MakeIf(instrs *[]*Instr) {
   lexer := NewLexer(program)
   linstr := lexer.MakeInstr()
 
-  *instrs = append(*instrs, NewInstr(op, name, nil, &IfInstr{type_: type_, val: name, body: linstr}))
+  *instrs = append(*instrs, NewInstr(op, []string{name}, nil, &IfInstr{type_: type_, val: name, body: linstr}, nil))
+}
+
+func (l *Lexer) MakeRL(instrs *[]*Instr) {
+  switch l.Op {
+  case instructions["RL:INIT"]:
+    if len(l.Args) == 2 {
+      *instrs = append(*instrs, NewInstr(l.Op, l.Args, nil, nil, nil))
+      l.Advance()
+    } else if len(l.Args) < 2 {
+      LexerError("Too few arguments for RL:INIT", l.Ln, l.Idx)
+      l.Advance()
+    } else {
+      LexerError("Too many arguments for RL:INIT", l.Ln, l.Idx)
+      l.Advance()
+    }
+  case instructions["RL:FORCLOSE"]:
+    if !l.IsArg() {
+      program := []string{}
+      op := l.Op
+      args := l.Args
+      l.Advance()
+
+      for l.Idx < len(l.Lines) {
+        line := strings.TrimSpace(l.Lines[l.Idx])
+        if line == "" {
+          l.Advance()
+          continue
+        }
+
+        if strings.ToUpper(line) == instructions["ROF"] {
+          program = append(program, line)
+          l.Advance()
+          break
+        }
+        if line != "" {
+          program = append(program, line)
+        }
+
+        l.Advance()
+      }
+
+      lexer := NewLexer(program)
+      loop := lexer.MakeInstr()
+      *instrs = append(*instrs, NewInstr(op, args, nil, nil, loop))
+    } else {
+      LexerError("Too many arguments for RL:FORCLOSE", l.Ln, l.Idx)
+      l.Advance()
+      return
+    }
+  case instructions["RL:FPS"]:
+    if l.IsArg() {
+      *instrs = append(*instrs, NewInstr(l.Op, l.Args, nil, nil, nil))
+    } else {
+      LexerError("Too many or too few arguments for RL:FPS", l.Ln, l.Idx)
+    }
+    l.Advance()
+  case instructions["RL:SAMPLEDRAW"]:
+    if !l.IsArg() {
+      *instrs = append(*instrs, NewInstr(l.Op, l.Args, nil, nil, nil))
+    } else {
+      LexerError("Too many arguments for RL:SAMPLEDRAW", l.Ln, l.Idx)
+    }
+    l.Advance()
+  case instructions["RL:BEGINDRAWING"]:
+    if !l.IsArg() {
+      *instrs = append(*instrs, NewInstr(l.Op, l.Args, nil, nil, nil))
+    } else {
+      LexerError("Too many arguments for RL:BEGINDRAWING", l.Ln, l.Idx)
+    }
+    l.Advance()
+  case instructions["RL:ENDDRAWING"]:
+    if !l.IsArg() {
+      *instrs = append(*instrs, NewInstr(l.Op, l.Args, nil, nil, nil))
+    } else {
+      LexerError("Too many arguments for RL:ENDDRAWING", l.Ln, l.Idx)
+    }
+    l.Advance()
+  case instructions["RL:CLEAR"]:
+    if l.IsArg() {
+      *instrs = append(*instrs, NewInstr(l.Op, l.Args, nil, nil, nil))
+    } else {
+      LexerError("Too many or too few arguments for RL:CLEAR", l.Ln, l.Idx)
+    }
+    l.Advance()
+  case instructions["RL:CLOSE"]:
+    if !l.IsArg() {
+      *instrs = append(*instrs, NewInstr(l.Op, l.Args, nil, nil, nil))
+    } else {
+      LexerError("Too many arguments for RL:CLOSE", l.Ln, l.Idx)
+    }
+    l.Advance()
+  case instructions["RL:EXEC"]:
+    if !l.IsArg() {
+      *instrs = append(*instrs, NewInstr(l.Op, l.Args, nil, nil, nil))
+    } else {
+      LexerError("Too many arguments for RL:EXEC", l.Ln, l.Idx)
+    }
+    l.Advance()
+  }
 }

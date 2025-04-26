@@ -1,0 +1,16 @@
+push 60
+push 640
+push 320
+
+rl:init 1 2
+rl:fps 0
+
+rl:forclose
+  rl:begindrawing
+  rl:clear WHITE
+  rl:enddrawing
+rof
+
+rl:exec
+
+end
