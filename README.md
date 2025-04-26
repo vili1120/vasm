@@ -42,7 +42,7 @@ Example:
 
 ## 🧾 Instruction Set
 
-View [instructions.norg](instructions.norg) or [instructions.txt](instructions.txt) for instruction set
+View [instructions.norg](instructions/instructions.norg) or [instructions.txt](instructions/instructions.txt) for instruction set
 
 ---
 
