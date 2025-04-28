@@ -46,7 +46,7 @@ Example:
 
 View [instructions.norg](instructions/instructions.norg) for instruction set
 
->> instructions.txt was removed due to being outdated and not being updated alongside the norg version
+> instructions.txt was removed due to being outdated and not being updated alongside the norg version
 
 ---
 
