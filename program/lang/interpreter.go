@@ -222,11 +222,13 @@ defer rl.CloseWindow()
     i.Advance()
     return
   case instructions["RL:CLEAR"]:
-    switch strings.ToUpper(i.CInstr.Arg[0]) {
-    case "WHITE":
+    switch i.Stack.Get(i.CInstr.Arg[0]) {
+    case 1:
       *i.RLcode += "\nrl.ClearBackground(rl.White)"
       i.Advance()
       return
+    default:
+      InterpreterError("Undefined color!", i.CInstr, i.Pc)
     }
   case instructions["RL:EXEC"]:
     *i.RLcode += "\n}"
@@ -242,16 +244,6 @@ require (
 	golang.org/x/exp v0.0.0-20240506185415-9bf2ced13842 // indirect
 	golang.org/x/sys v0.20.0 // indirect
 )
-    `
-    sum := `
-github.com/ebitengine/purego v0.7.1 h1:6/55d26lG3o9VCZX8lping+bZcmShseiqlh2bnUDiPA=
-github.com/ebitengine/purego v0.7.1/go.mod h1:ah1In8AOtksoNK6yk5z1HTJeUkC1Ez4Wk2idgGslMwQ=
-github.com/gen2brain/raylib-go/raylib v0.0.0-20250409052854-a4292f0f0412 h1:1ilXP20QHDAM0Vl6D9SNoNs6x+iyeV1TYsTZaltOLQY=
-github.com/gen2brain/raylib-go/raylib v0.0.0-20250409052854-a4292f0f0412/go.mod h1:BaY76bZk7nw1/kVOSQObPY1v1iwVE1KHAGMfvI6oK1Q=
-golang.org/x/exp v0.0.0-20240506185415-9bf2ced13842 h1:vr/HnozRka3pE4EsMEg1lgkXJkTFJCVUX+S/ZT6wYzM=
-golang.org/x/exp v0.0.0-20240506185415-9bf2ced13842/go.mod h1:XtvwrStGgqGPLc4cjQfWqZHG1YFdYs6swckp8vpsjnc=
-golang.org/x/sys v0.20.0 h1:Od9JTbYCk261bKm4M/mw7AklTlFYIa0bIp9BgSm1S8Y=
-golang.org/x/sys v0.20.0/go.mod h1:/VUhepiaJMQUp4+oa/7Zr1D23ma6VTLIYjOOTFZPUcA=
     `
     os.Mkdir("vasmoutdir", 0755)
     os.Chdir("vasmoutdir")
@@ -269,13 +261,16 @@ golang.org/x/sys v0.20.0/go.mod h1:/VUhepiaJMQUp4+oa/7Zr1D23ma6VTLIYjOOTFZPUcA=
       os.Exit(1)
     }
 
-    err = os.WriteFile("go.sum", []byte(sum), 0644)
+    fmt.Println("Running generated Go file...")
+    modtidy := exec.Command("go", "mod", "tidy")
+    modtidy.Stdout = os.Stdout
+    modtidy.Stderr = os.Stderr
+    modtidy.Stdin = os.Stdin
+    err = modtidy.Run()
     if err != nil {
-      fmt.Println("Error writing Go file:", err)
+      fmt.Println("Error during mod tidy", err)
       os.Exit(1)
     }
-
-    fmt.Println("Running generated Go file...")
     cmd := exec.Command("go", "run", "out.go")
     cmd.Stdout = os.Stdout
     cmd.Stderr = os.Stderr
@@ -291,7 +286,6 @@ golang.org/x/sys v0.20.0/go.mod h1:/VUhepiaJMQUp4+oa/7Zr1D23ma6VTLIYjOOTFZPUcA=
     os.Chdir("../")
     os.Remove("vasmoutdir")
 
-    // ✅ Keep advancing
     i.Advance()
     return
 

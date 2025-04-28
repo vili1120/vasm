@@ -44,7 +44,9 @@ Example:
 
 ## 🧾 Instruction Set
 
-View [instructions.norg](instructions/instructions.norg) or [instructions.txt](instructions/instructions.txt) for instruction set
+View [instructions.norg](instructions/instructions.norg) for instruction set
+
+>> instructions.txt was removed due to being outdated and not being updated alongside the norg version
 
 ---
 
@@ -84,19 +86,23 @@ PUSH 3
 DADV
 ADD
 PULL
+END
 ```
 
 ```vasm
-# Creates a simple raylib program
+# This script creates a simple raylib program
 
 # The width of the window
-PUSH 640
+PUSH 800
 
 # The height of the window
-PUSH 320
+PUSH 600
 
 # The target fps
 PUSH 60
+
+# The color white for RL:CLEAR
+PUSH 1
 
 RL:INIT 0 1
 RL:FPS 2
@@ -104,7 +110,7 @@ RL:FPS 2
 RL:FORCLOSE
     RL:BEGINDRAWING
     
-    RL:CLEAR WHITE
+    RL:CLEAR 3
 
     RL:ENDDRAWING
 ROF

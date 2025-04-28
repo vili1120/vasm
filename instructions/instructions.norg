@@ -55,9 +55,11 @@
    - executes the raylib BeginDrawing function
 ** RL:ENDDRAWING:
    - executes the raylib EndDrawing function
-** RL:CLEAR `<color>`:
-   - clears the screen and sets the background color to `<color>`
-   - right now only white is supported as a color
+** RL:CLEAR `<color idx>`:
+   - clears the screen and sets the background color to `<color idx>`
+   - `<color idx>` is the index of a cell in the stack
+   - Colors:
+   --- 1: White
 ** RL:FORCLOSE:
    - a loop that will only end when the window should close
    - ends with a 'ROF' instructions
